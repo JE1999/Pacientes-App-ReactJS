@@ -1,19 +1,22 @@
 import React, { Component } from 'react'
 import uuid from 'uuid'
+import PropTypes from 'prop-types'
+
+const stateInicial = {
+    cita : {
+        mascota: '',
+        dueno: '',
+        fecha: '',
+        hora: '',
+        sintomas: ''
+
+    },
+    error: false
+}
 
 export default class NuevaCita extends Component {
     
-    state = { 
-       cita : {
-           mascota: '',
-           dueno: '',
-           fecha: '',
-           hora: '',
-           sintomas: ''
-
-       },
-       error: false
-    }
+    state = { ...stateInicial }
 
     //cuando el usuario escribe em los inputs
     handleChange = e => {
@@ -51,15 +54,26 @@ export default class NuevaCita extends Component {
 
         //agregar al state de App.js
         this.props.crearNuevaCita(nuevaCita)
+
+        //colocar en el state el stateinicial
+        this.setState({
+            ...stateInicial
+        })
     }
 
     render() {
+
+        //extraer valor del state
+        const {error} = this.state
+
         return (
             <div className="card my-3 shadow">
                 <div className="card-body">
                     <h2 className="card-title text-center mb-5">
                         Llenar el formulario
                     </h2>
+
+                    { error ? <div className="alert alert-danger text-center mt-2 mb-2">Todos los campos son obligatorios</div> : null }
                     
                     <form
                         onSubmit={this.handleSubmit}
@@ -139,4 +153,8 @@ export default class NuevaCita extends Component {
             </div>
         )
     }
+}
+
+NuevaCita.propTypes = {
+    crearNuevaCita : PropTypes.func.isRequired
 }
